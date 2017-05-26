@@ -198,25 +198,7 @@ public class GpsStatusFragment extends Fragment implements GpsTestListener {
     public void gpsStop() {
     }
 
-    @Deprecated
-    public void onGpsStatusChanged(int event, GpsStatus status) {
-        switch (event) {
-            case GpsStatus.GPS_EVENT_STARTED:
-                setStarted(true);
-                break;
 
-            case GpsStatus.GPS_EVENT_STOPPED:
-                setStarted(false);
-                break;
-
-            case GpsStatus.GPS_EVENT_FIRST_FIX:
-                break;
-
-            case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-                updateLegacyStatus(status);
-                break;
-        }
-    }
 
     @Override
     public void onGnssFirstFix(int ttffMillis) {
@@ -328,50 +310,7 @@ public class GpsStatusFragment extends Fragment implements GpsTestListener {
 
     }
 
-    @Deprecated
-    private void updateLegacyStatus(GpsStatus status) {
-        setStarted(true);
-        updateFixTime();
 
-
-
-        Iterator<GpsSatellite> satellites = status.getSatellites().iterator();
-
-        if (mPrns == null) {
-            int length = status.getMaxSatellites();
-            mPrns = new int[length];
-            mSnrCn0s = new float[length];
-            mSvElevations = new float[length];
-            mSvAzimuths = new float[length];
-            // Constellation type isn't used, but instantiate it to avoid NPE in legacy devices
-            mConstellationType = new int[length];
-            mHasEphemeris = new boolean[length];
-            mHasAlmanac = new boolean[length];
-            mUsedInFix = new boolean[length];
-        }
-
-        mSvCount = 0;
-        mUsedInFixCount = 0;
-        while (satellites.hasNext()) {
-            GpsSatellite satellite = satellites.next();
-            int prn = satellite.getPrn();
-            mPrns[mSvCount] = prn;
-            mSnrCn0s[mSvCount] = satellite.getSnr();
-            mSvElevations[mSvCount] = satellite.getElevation();
-            mSvAzimuths[mSvCount] = satellite.getAzimuth();
-            mHasEphemeris[mSvCount] = satellite.hasEphemeris();
-            mHasAlmanac[mSvCount] = satellite.hasAlmanac();
-            mUsedInFix[mSvCount] = satellite.usedInFix();
-            if (satellite.usedInFix()) {
-                mUsedInFixCount++;
-            }
-            mSvCount++;
-        }
-
-        mNumSats.setText(getString(R.string.gps_num_sats_value, mUsedInFixCount, mSvCount));
-
-
-    }
 
 
 }

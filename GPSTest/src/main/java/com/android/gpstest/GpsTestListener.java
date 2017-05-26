@@ -14,9 +14,6 @@ public interface GpsTestListener extends LocationListener {
 
     void gpsStop();
 
-    @Deprecated
-    void onGpsStatusChanged(int event, GpsStatus status);
-
     void onGnssFirstFix(int ttffMillis);
 
     void onSatelliteStatusChanged(GnssStatus status);

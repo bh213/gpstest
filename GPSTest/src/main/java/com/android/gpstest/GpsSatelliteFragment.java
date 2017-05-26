@@ -52,13 +52,13 @@ public class GpsSatelliteFragment extends Fragment implements GpsTestListener {
 
     private static final int SNR_COLUMN = 2;
 
-    private static final int ELEVATION_COLUMN = 3;
+    private static final int ELEVATION_COLUMN = 5;
 
     private static final int AZIMUTH_COLUMN = 4;
 
-    private static final int FLAGS_COLUMN = 5;
+    private static final int FLAGS_COLUMN = 3;
 
-    private static final int COLUMN_COUNT = 6;
+    private static final int COLUMN_COUNT = 4;
 
 
     private Resources mRes;
@@ -158,25 +158,7 @@ public class GpsSatelliteFragment extends Fragment implements GpsTestListener {
     public void gpsStop() {
     }
 
-    @Deprecated
-    public void onGpsStatusChanged(int event, GpsStatus status) {
-        switch (event) {
-            case GpsStatus.GPS_EVENT_STARTED:
-                setStarted(true);
-                break;
 
-            case GpsStatus.GPS_EVENT_STOPPED:
-                setStarted(false);
-                break;
-
-            case GpsStatus.GPS_EVENT_FIRST_FIX:
-                break;
-
-            case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-                updateLegacyStatus(status);
-                break;
-        }
-    }
 
     @Override
     public void onGnssFirstFix(int ttffMillis) {
@@ -274,49 +256,7 @@ public class GpsSatelliteFragment extends Fragment implements GpsTestListener {
         mAdapter.notifyDataSetChanged();
     }
 
-    @Deprecated
-    private void updateLegacyStatus(GpsStatus status) {
-        setStarted(true);
 
-
-        mSnrCn0Title = mRes.getString(R.string.gps_snr_column_label);
-
-        Iterator<GpsSatellite> satellites = status.getSatellites().iterator();
-
-        if (mPrns == null) {
-            int length = status.getMaxSatellites();
-            mPrns = new int[length];
-            mSnrCn0s = new float[length];
-            mSvElevations = new float[length];
-            mSvAzimuths = new float[length];
-            // Constellation type isn't used, but instantiate it to avoid NPE in legacy devices
-            mConstellationType = new int[length];
-            mHasEphemeris = new boolean[length];
-            mHasAlmanac = new boolean[length];
-            mUsedInFix = new boolean[length];
-        }
-
-        mSvCount = 0;
-        mUsedInFixCount = 0;
-        while (satellites.hasNext()) {
-            GpsSatellite satellite = satellites.next();
-            int prn = satellite.getPrn();
-            mPrns[mSvCount] = prn;
-            mSnrCn0s[mSvCount] = satellite.getSnr();
-            mSvElevations[mSvCount] = satellite.getElevation();
-            mSvAzimuths[mSvCount] = satellite.getAzimuth();
-            mHasEphemeris[mSvCount] = satellite.hasEphemeris();
-            mHasAlmanac[mSvCount] = satellite.hasAlmanac();
-            mUsedInFix[mSvCount] = satellite.usedInFix();
-            if (satellite.usedInFix()) {
-                mUsedInFixCount++;
-            }
-            mSvCount++;
-        }
-
-
-        mAdapter.notifyDataSetChanged();
-    }
 
     private class SvGridAdapter extends BaseAdapter {
 
@@ -394,7 +334,7 @@ public class GpsSatelliteFragment extends Fragment implements GpsTestListener {
                             type = GpsTestUtil.getGnssConstellationType(mConstellationType[row]);
                         } else {
 
-                            type = GpsTestUtil.getGnssType(mPrns[row]);
+                            type = GnssType.QZSS; // TODO: fixme
                         }
                         switch (type) {
                             case NAVSTAR:

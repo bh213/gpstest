@@ -135,22 +135,6 @@ public class GpsSkyFragment extends Fragment implements GpsTestListener {
         mSkyView.setGnssMeasurementEvent(event);
     }
 
-    @Deprecated
-    public void onGpsStatusChanged(int event, GpsStatus status) {
-        switch (event) {
-            case GpsStatus.GPS_EVENT_STARTED:
-                mSkyView.setStarted();
-                break;
-
-            case GpsStatus.GPS_EVENT_STOPPED:
-                mSkyView.setStopped();
-                break;
-
-            case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-                mSkyView.setSats(status);
-                break;
-        }
-    }
 
     @Override
     public void onOrientationChanged(double orientation, double tilt) {
@@ -340,42 +324,7 @@ public class GpsSkyFragment extends Fragment implements GpsTestListener {
             // No-op
         }
 
-        @Deprecated
-        public void setSats(GpsStatus status) {
-            // Use SNR instead of C/N0 - see #65
-            mUseSnr = true;
 
-            Iterator<GpsSatellite> satellites = status.getSatellites().iterator();
-
-            if (mSnrCn0s == null) {
-                int length = status.getMaxSatellites();
-                mSnrCn0s = new float[length];
-                mElevs = new float[length];
-                mAzims = new float[length];
-                mPrns = new int[length];
-                mHasEphemeris = new boolean[length];
-                mHasAlmanac = new boolean[length];
-                mUsedInFix = new boolean[length];
-                // Constellation type isn't used, but instantiate it to avoid NPE in legacy devices
-                mConstellationType = new int[length];
-            }
-
-            mSvCount = 0;
-            while (satellites.hasNext()) {
-                GpsSatellite satellite = satellites.next();
-                mSnrCn0s[mSvCount] = satellite.getSnr();
-                mElevs[mSvCount] = satellite.getElevation();
-                mAzims[mSvCount] = satellite.getAzimuth();
-                mPrns[mSvCount] = satellite.getPrn();
-                mHasEphemeris[mSvCount] = satellite.hasEphemeris();
-                mHasAlmanac[mSvCount] = satellite.hasAlmanac();
-                mUsedInFix[mSvCount] = satellite.usedInFix();
-                mSvCount++;
-            }
-
-            mStarted = true;
-            invalidate();
-        }
 
         private void drawLine(Canvas c, float x1, float y1, float x2, float y2) {
             // rotate the line based on orientation
@@ -479,11 +428,10 @@ public class GpsSkyFragment extends Fragment implements GpsTestListener {
 
             // Change shape based on satellite operator
             GnssType operator;
-            if (GpsTestUtil.isGnssStatusListenerSupported()) {
+
                 operator = GpsTestUtil.getGnssConstellationType(constellationType);
-            } else {
-                operator = GpsTestUtil.getGnssType(prn);
-            }
+
+
             switch (operator) {
                 case NAVSTAR:
                     c.drawCircle(x, y, SAT_RADIUS, fillPaint);
@@ -690,11 +638,6 @@ public class GpsSkyFragment extends Fragment implements GpsTestListener {
 
         @Override
         public void onNmeaMessage(String message, long timestamp) {
-        }
-
-        @Deprecated
-        @Override
-        public void onGpsStatusChanged(int event, GpsStatus status) {
         }
 
         @Override

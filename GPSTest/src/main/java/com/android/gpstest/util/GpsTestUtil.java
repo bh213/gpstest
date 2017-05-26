@@ -42,32 +42,7 @@ public class GpsTestUtil {
 
     private static StringBuilder mNmeaOutput = new StringBuilder();
 
-    /**
-     * Returns the Global Navigation Satellite System (GNSS) for a satellite given the PRN.  For
-     * Android 6.0.1 (API Level 23) and lower.  Android 7.0 and higher should use
-     *
-     * @param prn PRN value provided by the GpsSatellite.getPrn() method
-     * @return GnssType for the given PRN
-     */
-    @Deprecated
-    public static GnssType getGnssType(int prn) {
-        if (prn >= 65 && prn <= 96) {
-            // See Issue #26 for details
-            return GnssType.GLONASS;
-        } else if (prn >= 193 && prn <= 200) {
-            // See Issue #54 for details
-            return GnssType.QZSS;
-        } else if (prn >= 201 && prn <= 235) {
-            // See Issue #54 for details
-            return GnssType.BEIDOU;
-        } else if (prn >= 301 && prn <= 330) {
-            // See https://github.com/barbeau/gpstest/issues/58#issuecomment-252235124 for details
-            return GnssType.GALILEO;
-        } else {
-            // Assume US NAVSTAR for now, since we don't have any other info on sat-to-PRN mappings
-            return GnssType.NAVSTAR;
-        }
-    }
+
 
     /**
      * Returns the Global Navigation Satellite System (GNSS) for a satellite given the GnssStatus

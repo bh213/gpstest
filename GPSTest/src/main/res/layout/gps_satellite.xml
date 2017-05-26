@@ -22,8 +22,8 @@
           android:padding="4dp"
           android:verticalSpacing="1dp"
           android:horizontalSpacing="1dp"
-          android:numColumns="3"
-          android:rowHeight="16dp"
+          android:numColumns="4"
+          android:rowHeight="12dp"
 
           android:stretchMode="columnWidth"
           android:listSelector="@android:color/transparent"

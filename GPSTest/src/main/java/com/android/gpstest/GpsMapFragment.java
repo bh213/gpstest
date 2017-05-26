@@ -223,9 +223,7 @@ public class GpsMapFragment extends SupportMapFragment
     public void onProviderDisabled(String provider) {
     }
 
-    @Deprecated
-    public void onGpsStatusChanged(int event, GpsStatus status) {
-    }
+
 
     @Override
     public void onGnssFirstFix(int ttffMillis) {

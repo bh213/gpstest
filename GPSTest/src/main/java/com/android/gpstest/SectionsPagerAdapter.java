@@ -26,20 +26,22 @@ import android.support.v4.app.FragmentStatePagerAdapter;
  */
 public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
-    public static final int NUMBER_OF_TABS = 3; // Used to set up TabListener
+    public static final int NUMBER_OF_TABS = 4; // Used to set up TabListener
 
     // Constants for the different fragments that will be displayed in tabs, in numeric order
-    public static final int GPS_STATUS_FRAGMENT = 0;
+    public static final int GPS_SATELLITE_FRAGMENT = 0;
 
-    public static final int GPS_MAP_FRAGMENT = 1;
+    public static final int GPS_STATUS_FRAGMENT = 1;
 
-    public static final int GPS_SKY_FRAGMENT = 2;
+    public static final int GPS_MAP_FRAGMENT = 2;
+
+    public static final int GPS_SKY_FRAGMENT = 3;
 
     // Maintain handle to Fragments to avoid recreating them if one already
     // exists
-    Fragment gpsStatus, gpsMap, gpsSky;
+    private Fragment gpsSatellite, gpsStatus, gpsMap, gpsSky;
 
-    public SectionsPagerAdapter(FragmentManager fm) {
+    SectionsPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
@@ -61,6 +63,12 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
                     gpsSky = new GpsSkyFragment();
                 }
                 return gpsSky;
+            case GPS_SATELLITE_FRAGMENT:
+                if (gpsSatellite == null) {
+                    gpsSatellite = new GpsSatelliteFragment();
+                }
+                return gpsSatellite;
+
         }
         return null; // This should never happen
     }
@@ -79,6 +87,8 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
                 return Application.get().getString(R.string.gps_map_tab);
             case GPS_SKY_FRAGMENT:
                 return Application.get().getString(R.string.gps_sky_tab);
+            case GPS_SATELLITE_FRAGMENT:
+                return Application.get().getString(R.string.gps_satellite_tab);
         }
         return null; // This should never happen
     }

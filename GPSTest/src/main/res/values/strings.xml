@@ -236,4 +236,5 @@
         <b>android-switch-backport</b>
         - https://github.com/BoD/android-switch-backport
     </string>
+    <string name="gps_satellite_tab">Satellite</string>
 </resources>

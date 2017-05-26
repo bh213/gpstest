@@ -17,6 +17,7 @@
 
 package com.android.gpstest;
 
+import android.support.v4.app.ActivityCompat;
 import com.android.gpstest.util.GpsTestUtil;
 import com.android.gpstest.util.MathUtils;
 import com.android.gpstest.util.PreferenceUtils;
@@ -160,9 +161,14 @@ public class GpsTestActivity extends AppCompatActivity
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         sInstance = this;
+
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) !=  PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 77);
+        }
 
         // Set the default values from the XML file if this is the first
         // execution of the app
@@ -938,6 +944,8 @@ public class GpsTestActivity extends AppCompatActivity
     private void initActionBar(Bundle savedInstanceState) {
         // Set up the action bar.
         final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
         actionBar.setNavigationMode(android.support.v7.app.ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setTitle(getApplicationContext().getText(R.string.app_name));
 
@@ -949,7 +957,7 @@ public class GpsTestActivity extends AppCompatActivity
             // Set up the ViewPager with the sections adapter.
             mViewPager = (ViewPagerMapBevelScroll) findViewById(R.id.pager);
             mViewPager.setAdapter(mSectionsPagerAdapter);
-            mViewPager.setOffscreenPageLimit(2);
+            mViewPager.setOffscreenPageLimit(3);
 
             // When swiping between different sections, select the corresponding
             // tab. We can also use ActionBar.Tab#select() to do this if we have a

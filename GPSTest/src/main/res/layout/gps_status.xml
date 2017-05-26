@@ -16,156 +16,105 @@
 ** limitations under the License.
 */
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent">
+<ScrollView android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent">
 
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+    >
 
-        <TableLayout android:id="@+id/lat_long_table"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content">
-            <TableRow>
-                <TextView android:id="@+id/latitude_label"
-                          android:text="@string/gps_latitude_label"
-                          android:layout_gravity="right"
-                          android:layout_marginRight="8dip"
-                          style="@style/info_label"/>
 
-                <TextView android:id="@+id/latitude"
-                          style="@style/info_value"/>
+        <TextView android:id="@+id/latitude_label"
+                  android:text="@string/gps_latitude_label"
 
-                <TextView android:id="@+id/fix_time_label"
-                          android:text="@string/gps_fix_time_label"
-                          android:layout_gravity="right"
-                          android:layout_marginRight="8dip"
-                          style="@style/info_label"/>
+                  style="@style/info_label"/>
 
-                <TextView android:id="@+id/fix_time"
-                          style="@style/info_value"/>
-            </TableRow>
+        <TextView android:id="@+id/latitude"
+                  style="@style/info_value"/>
 
-            <TableRow>
-                <TextView android:id="@+id/longitude_label"
-                          android:text="@string/gps_longitude_label"
-                          android:layout_gravity="right"
-                          android:layout_marginRight="8dip"
-                          style="@style/info_label"/>
+        <TextView android:id="@+id/fix_time_label"
+                  android:text="@string/gps_fix_time_label"
+                  style="@style/info_label"/>
 
-                <TextView android:id="@+id/longitude"
-                          style="@style/info_value"/>
+        <TextView android:id="@+id/fix_time"
+                  style="@style/info_value"/>
+        <TextView android:id="@+id/longitude_label"
+                  android:text="@string/gps_longitude_label"
+                  style="@style/info_label"/>
 
-                <TextView android:id="@+id/gps_ttff_label"
-                          android:text="@string/gps_ttff_label"
-                          android:layout_gravity="right"
-                          android:layout_marginRight="8dip"
-                          style="@style/info_label"/>
+        <TextView android:id="@+id/longitude"
+                  style="@style/info_value"/>
 
-                <TextView android:id="@+id/ttff"
-                          style="@style/info_value"/>
-            </TableRow>
+        <TextView android:id="@+id/gps_ttff_label"
+                  android:text="@string/gps_ttff_label"
+                  style="@style/info_label"/>
 
-            <TableRow>
-                <TextView android:id="@+id/altitude_label"
-                          android:text="@string/gps_altitude_label"
-                          android:layout_gravity="right"
-                          android:layout_marginRight="8dip"
-                          style="@style/info_label"/>
+        <TextView android:id="@+id/ttff"
+                  style="@style/info_value"/>
 
-                <TextView android:id="@+id/altitude"
-                          style="@style/info_value"/>
+        <TextView android:id="@+id/altitude_label"
+                  android:text="@string/gps_altitude_label"
+                  style="@style/info_label"/>
 
-                <TextView android:id="@+id/accuracy_label"
-                          android:text="@string/gps_accuracy_label"
-                          android:layout_gravity="right"
-                          android:layout_marginRight="8dip"
-                          style="@style/info_label"/>
+        <TextView android:id="@+id/altitude"
+                  style="@style/info_value"/>
 
-                <TextView android:id="@+id/accuracy"
-                          style="@style/info_value"/>
-            </TableRow>
+        <TextView android:id="@+id/accuracy_label"
+                  android:text="@string/gps_accuracy_label"
+                  style="@style/info_label"/>
 
-            <TableRow>
-                <TextView android:id="@+id/altitude_msl_label"
-                          android:text="@string/gps_altitude_msl_label"
-                          android:layout_gravity="right"
-                          android:layout_marginRight="8dip"
-                          style="@style/info_label"/>
+        <TextView android:id="@+id/accuracy"
+                  style="@style/info_value"/>
+        <TextView android:id="@+id/altitude_msl_label"
+                  android:text="@string/gps_altitude_msl_label"
+                  style="@style/info_label"/>
 
-                <TextView android:id="@+id/altitude_msl"
-                          style="@style/info_value"/>
+        <TextView android:id="@+id/altitude_msl"
+                  style="@style/info_value"/>
 
-                <TextView android:id="@+id/speed_label"
-                          android:text="@string/gps_speed_label"
-                          android:layout_gravity="right"
-                          android:layout_marginRight="8dip"
-                          style="@style/info_label"/>
+        <TextView android:id="@+id/speed_label"
+                  android:text="@string/gps_speed_label"
+                  style="@style/info_label"/>
 
-                <TextView android:id="@+id/speed"
-                          style="@style/info_value"/>
+        <TextView android:id="@+id/speed"
+                  style="@style/info_value"/>
 
-            </TableRow>
-            <TableRow>
-                <TextView android:id="@+id/num_sats_label"
-                          android:text="@string/gps_num_sats_label"
-                          android:layout_gravity="right"
-                          android:layout_marginRight="8dip"
-                          style="@style/info_label"/>
+        <TextView android:id="@+id/num_sats_label"
+                  android:text="@string/gps_num_sats_label"
+                  style="@style/info_label"/>
 
-                <TextView android:id="@+id/num_sats"
-                          style="@style/info_value"/>
+        <TextView android:id="@+id/num_sats"
+                  style="@style/info_value"/>
 
-                <TextView android:id="@+id/bearing_label"
-                          android:text="@string/gps_bearing_label"
-                          android:layout_gravity="right"
-                          android:layout_marginRight="8dip"
-                          style="@style/info_label"/>
+        <TextView android:id="@+id/bearing_label"
+                  android:text="@string/gps_bearing_label"
+                  style="@style/info_label"/>
 
-                <TextView android:id="@+id/bearing"
-                          style="@style/info_value"/>
-            </TableRow>
-            <TableRow>
-                <TextView android:id="@+id/pdop_label"
-                          android:text="@string/pdop_label"
-                          android:layout_gravity="right"
-                          android:layout_marginRight="8dip"
-                          style="@style/info_label"
-                          android:visibility="gone"/>
+        <TextView android:id="@+id/bearing"
+                  style="@style/info_value"/>
 
-                <TextView android:id="@+id/pdop"
-                          style="@style/info_value"
-                          android:visibility="gone"/>
+        <TextView android:id="@+id/pdop_label"
+                  android:text="@string/pdop_label"
+                  style="@style/info_label"
+                  android:visibility="gone"/>
 
-                <TextView android:id="@+id/hvdop_label"
-                          android:text="@string/hvdop_label"
-                          android:layout_gravity="right"
-                          android:layout_marginRight="8dip"
-                          style="@style/info_label"
-                          android:visibility="gone"/>
+        <TextView android:id="@+id/pdop"
+                  style="@style/info_value"
+                  android:visibility="gone"/>
 
-                <TextView android:id="@+id/hvdop"
-                          style="@style/info_value"
-                          android:visibility="gone"/>
-            </TableRow>
+        <TextView android:id="@+id/hvdop_label"
+                  android:text="@string/hvdop_label"
+                  style="@style/info_label"
+                  android:visibility="gone"/>
 
-        </TableLayout>
+        <TextView android:id="@+id/hvdop"
+                  style="@style/info_value"
+                  android:visibility="gone"/>
+
+
     </LinearLayout>
+</ScrollView>
 
-    <GridView android:id="@+id/sv_grid"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:padding="4dp"
-              android:verticalSpacing="1dp"
-              android:horizontalSpacing="2dp"
-              android:numColumns="6"
-              android:rowHeight="16dp"
-              android:columnWidth="50dp"
-              android:stretchMode="columnWidth"
-              android:listSelector="@android:color/transparent"
-              android:gravity="center"
-            />
-</LinearLayout>
+

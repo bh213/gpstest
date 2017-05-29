@@ -43,7 +43,6 @@ public class GpsTestUtil {
     private static StringBuilder mNmeaOutput = new StringBuilder();
 
 
-
     /**
      * Returns the Global Navigation Satellite System (GNSS) for a satellite given the GnssStatus
      * constellation type.  For Android 7.0 and higher.  This is basically a translation to our
@@ -85,15 +84,6 @@ public class GpsTestUtil {
                 sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) != null;
     }
 
-    /**
-     * Returns true if the app is running on a large screen device, false if it is not
-     *
-     * @return true if the app is running on a large screen device, false if it is not
-     */
-    public static boolean isLargeScreen(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
-    }
 
     /**
      * Returns true if the device supports the Gnss status listener, false if it does not
@@ -104,16 +94,6 @@ public class GpsTestUtil {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
     }
 
-    /**
-     * Creates a unique key to identify this satellite using a combination of both the svid and
-     * constellation type
-     *
-     * @return a unique key to identify this satellite using a combination of both the svid and
-     * constellation type
-     */
-    public static String createGnssSatelliteKey(int svid, int constellationType) {
-        return String.valueOf(svid) + " " + String.valueOf(constellationType);
-    }
 
     /**
      * Converts screen dimension units from dp to pixels, based on algorithm defined in
@@ -166,11 +146,11 @@ public class GpsTestUtil {
      * Given a $GPGGA or $GNGNS NMEA sentence, return the altitude above mean sea level (geoid
      * altitude),
      * or null if the altitude can't be parsed.
-     *
+     * <p>
      * Example inputs are:
      * $GPGGA,032739.0,2804.732835,N,08224.639709,W,1,08,0.8,19.2,M,-24.0,M,,*5B
      * $GNGNS,015002.0,2804.733672,N,08224.631117,W,AAN,09,1.1,78.9,-24.0,,*23
-     *
+     * <p>
      * Example outputs would be:
      * 19.2
      * 78.9
@@ -200,11 +180,11 @@ public class GpsTestUtil {
     /**
      * Given a $GNGSA or $GPGSA NMEA sentence, return the dilution of precision, or null if dilution of
      * precision can't be parsed.
-     *
+     * <p>
      * Example inputs are:
      * $GPGSA,A,3,03,14,16,22,23,26,,,,,,,3.6,1.8,3.1*38
      * $GNGSA,A,3,03,14,16,22,23,26,,,,,,,3.6,1.8,3.1,1*3B
-     *
+     * <p>
      * Example output is:
      * PDOP is 3.6, HDOP is 1.8, and VDOP is 3.1
      *

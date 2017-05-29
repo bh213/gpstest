@@ -75,18 +75,13 @@ import static com.android.gpstest.util.GpsTestUtil.writeNavMessageToLog;
 import static com.android.gpstest.util.GpsTestUtil.writeNmeaToLog;
 
 public class GpsTestActivity extends AppCompatActivity
-        implements LocationListener, android.support.v7.app.ActionBar.TabListener,
+        implements LocationListener, android.support.v7.app.ActionBar.TabListener, ActivityCompat.OnRequestPermissionsResultCallback,
         SensorEventListener {
 
     private static final String TAG = "GpsTestActivity";
 
-    private static final int WHATSNEW_DIALOG = 1;
-
-    private static final String WHATS_NEW_VER = "whatsNewVer";
 
     private static final int SECONDS_TO_MILLISECONDS = 1000;
-
-    static boolean mIsLargeScreen = false;
 
     private static GpsTestActivity sInstance;
 
@@ -168,7 +163,15 @@ public class GpsTestActivity extends AppCompatActivity
 
         // Set the default values from the XML file if this is the first
         // execution of the app
+        init(savedInstanceState);
+    }
+
+
+
+
+    private void init(Bundle savedInstanceState) {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
 
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mProvider = mLocationManager.getProvider(LocationManager.GPS_PROVIDER);
@@ -182,15 +185,20 @@ public class GpsTestActivity extends AppCompatActivity
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-        // If we have a large screen, show all the fragments in one layout
-        if (GpsTestUtil.isLargeScreen(this)) {
-            setContentView(R.layout.activity_main_large_screen);
-            mIsLargeScreen = true;
-        } else {
-            setContentView(R.layout.activity_main);
-        }
+        setContentView(R.layout.activity_main);
 
-        initActionBar(savedInstanceState);
+        final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
+
+        //  page adapter contains all the fragment registrations
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPagerMapBevelScroll) findViewById(R.id.pager);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOffscreenPageLimit(3);
+
 
         SharedPreferences settings = Application.getPrefs();
 
@@ -204,13 +212,14 @@ public class GpsTestActivity extends AppCompatActivity
                         getString(R.string.pref_gps_min_distance_default_meters))
         );
 
-        if (settings.getBoolean(getString(R.string.pref_key_auto_start_gps), true)) {
-            gpsStart();
-        }
 
-        autoShowWhatsNew();
+        gpsStart();
+
+
+
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onResume() {
         super.onResume();
@@ -371,6 +380,7 @@ public class GpsTestActivity extends AppCompatActivity
             public void onSatelliteStatusChanged(GnssStatus status) {
                 mGnssStatus = status;
 
+                Log.e("XXX", String.valueOf(status.getSatelliteCount()));
                 // Stop progress bar after the first status information is obtained
                 setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
 
@@ -380,7 +390,7 @@ public class GpsTestActivity extends AppCompatActivity
             }
         };
         mLocationManager.registerGnssStatusCallback(mGnssStatusListener);
-    }
+}
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void addGnssMeasurementsListener() {
@@ -525,22 +535,12 @@ public class GpsTestActivity extends AppCompatActivity
     }
 
     private void checkKeepScreenOn(SharedPreferences settings) {
-        if (mViewPager != null) {
+
             if (settings.getBoolean(getString(R.string.pref_key_keep_screen_on), true)) {
                 mViewPager.setKeepScreenOn(true);
             } else {
                 mViewPager.setKeepScreenOn(false);
             }
-        } else {
-            View v = findViewById(R.id.large_screen_layout);
-            if (v != null && mIsLargeScreen) {
-                if (settings.getBoolean(getString(R.string.pref_key_keep_screen_on), true)) {
-                    v.setKeepScreenOn(true);
-                } else {
-                    v.setKeepScreenOn(false);
-                }
-            }
-        }
     }
 
     private void checkTrueNorth(SharedPreferences settings) {
@@ -687,10 +687,6 @@ public class GpsTestActivity extends AppCompatActivity
             case R.id.menu_settings:
                 // Show settings menu
                 startActivity(new Intent(this, Preferences.class));
-                return true;
-            case R.id.menu_help:
-                // Show help
-                startActivity(new Intent(this, HelpActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -856,99 +852,9 @@ public class GpsTestActivity extends AppCompatActivity
     public void onTabReselected(android.support.v7.app.ActionBar.Tab tab, FragmentTransaction ft) {
     }
 
-    private void initActionBar(Bundle savedInstanceState) {
-        // Set up the action bar.
-        final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
 
-        actionBar.setNavigationMode(android.support.v7.app.ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setTitle(getApplicationContext().getText(R.string.app_name));
 
-        // If we don't have a large screen, set up the tabs using the ViewPager
-        if (!mIsLargeScreen) {
-            //  page adapter contains all the fragment registrations
-            mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-            // Set up the ViewPager with the sections adapter.
-            mViewPager = (ViewPagerMapBevelScroll) findViewById(R.id.pager);
-            mViewPager.setAdapter(mSectionsPagerAdapter);
-            mViewPager.setOffscreenPageLimit(3);
 
-            // When swiping between different sections, select the corresponding
-            // tab. We can also use ActionBar.Tab#select() to do this if we have a
-            // reference to the Tab.
-            mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-                @Override
-                public void onPageSelected(int position) {
-                    actionBar.setSelectedNavigationItem(position);
-                }
-            });
-            // For each of the sections in the app, add a tab to the action bar.
-            for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-                // Create a tab with text corresponding to the page title defined by
-                // the adapter. Also specify this Activity object, which implements
-                // the TabListener interface, as the listener for when this tab is
-                // selected.
-                actionBar.addTab(actionBar.newTab()
-                        .setText(mSectionsPagerAdapter.getPageTitle(i))
-                        .setTabListener(this));
-            }
-        }
-    }
 
-    /**
-     * Show the "What's New" message if a new version was just installed
-     */
-    @SuppressWarnings("deprecation")
-    private void autoShowWhatsNew() {
-        SharedPreferences settings = Application.getPrefs();
-
-        // Get the current app version.
-        PackageManager pm = getPackageManager();
-        PackageInfo appInfo = null;
-        try {
-            appInfo = pm.getPackageInfo(getPackageName(),
-                    PackageManager.GET_META_DATA);
-        } catch (PackageManager.NameNotFoundException e) {
-            // Do nothing
-            return;
-        }
-
-        final int oldVer = settings.getInt(WHATS_NEW_VER, 0);
-        final int newVer = appInfo.versionCode;
-
-        if (oldVer < newVer) {
-            showDialog(WHATSNEW_DIALOG);
-            PreferenceUtils.saveInt(WHATS_NEW_VER, appInfo.versionCode);
-        }
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case WHATSNEW_DIALOG:
-                return createWhatsNewDialog();
-        }
-        return super.onCreateDialog(id);
-    }
-
-    @SuppressWarnings("deprecation")
-    private Dialog createWhatsNewDialog() {
-        TextView textView = (TextView) getLayoutInflater().inflate(R.layout.whats_new_dialog, null);
-        textView.setText(R.string.main_help_whatsnew);
-
-        android.support.v7.app.AlertDialog.Builder builder
-                = new android.support.v7.app.AlertDialog.Builder(this);
-        builder.setTitle(R.string.main_help_whatsnew_title);
-        builder.setIcon(R.drawable.gpstest_icon);
-        builder.setView(textView);
-        builder.setNeutralButton(R.string.main_help_close,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dismissDialog(WHATSNEW_DIALOG);
-                    }
-                }
-        );
-        return builder.create();
-    }
 }
